@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central Limit Theorem Visualization</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
+        <h1 class="text-3xl font-bold mb-6 text-center">Central Limit Theorem Visualization</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+                <label for="sampleSize" class="block mb-2 font-semibold">Sample Size:</label>
+                <input type="range" id="sampleSize" min="1" max="1000" value="30" class="w-full">
+                <span id="sampleSizeValue" class="block mt-1 text-sm text-gray-600"></span>
+            </div>
+            <div>
+                <label for="numSamples" class="block mb-2 font-semibold">Number of Samples:</label>
+                <input type="range" id="numSamples" min="100" max="10000" value="1000" class="w-full">
+                <span id="numSamplesValue" class="block mt-1 text-sm text-gray-600"></span>
+            </div>
+        </div>
+        
+        <div class="mb-6">
+            <button id="generateBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
+                Generate Samples
+            </button>
+        </div>
+        
+        <div id="histogram" class="w-full h-96"></div>
+    </div>
+
+    <script>
+        const sampleSizeSlider = document.getElementById('sampleSize');
+        const numSamplesSlider = document.getElementById('numSamples');
+        const sampleSizeValue = document.getElementById('sampleSizeValue');
+        const numSamplesValue = document.getElementById('numSamplesValue');
+        const generateBtn = document.getElementById('generateBtn');
+
+        function updateSliderValues() {
+            sampleSizeValue.textContent = sampleSizeSlider.value;
+            numSamplesValue.textContent = numSamplesSlider.value;
+        }
+
+        function generateSamples() {
+            const sampleSize = parseInt(sampleSizeSlider.value);
+            const numSamples = parseInt(numSamplesSlider.value);
+            const sampleMeans = [];
+
+            for (let i = 0; i < numSamples; i++) {
+                const sample = Array.from({ length: sampleSize }, () => Math.random());
+                const sampleMean = sample.reduce((a, b) => a + b) / sampleSize;
+                sampleMeans.push(sampleMean);
+            }
+
+            return sampleMeans;
+        }
+
+        function updateHistogram(data) {
+            const binCount = 30;
+            const binWidth = 1 / binCount;
+            const bins = Array(binCount).fill(0);
+            const binCenters = [];
+
+            data.forEach(value => {
+                const binIndex = Math.min(Math.floor(value / binWidth), binCount - 1);
+                bins[binIndex]++;
+            });
+
+            for (let i = 0; i < binCount; i++) {
+                binCenters.push((i + 0.5) * binWidth);
+            }
+
+            const trace1 = {
+                x: binCenters,
+                y: bins,
+                type: 'bar',
+                name: 'Histogram',
+                marker: {
+                    color: 'rgba(54, 162, 235, 0.6)',
+                    line: {
+                        color: 'rgba(54, 162, 235, 1)',
+                        width: 1
+                    }
+                }
+            };
+
+            const trace2 = {
+                x: binCenters,
+                y: bins,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Line Chart',
+                line: {
+                    color: 'rgba(255, 99, 132, 1)',
+                    width: 2
+                }
+            };
+
+            const layout = {
+                title: 'Distribution of Sample Means',
+                xaxis: {
+                    title: 'Sample Mean',
+                    range: [0, 1]
+                },
+                yaxis: {
+                    title: 'Frequency'
+                },
+                barmode: 'overlay',
+                showlegend: true
+            };
+
+            Plotly.newPlot('histogram', [trace1, trace2], layout);
+        }
+
+        function generate() {
+            const sampleMeans = generateSamples();
+            updateHistogram(sampleMeans);
+        }
+
+        sampleSizeSlider.addEventListener('input', updateSliderValues);
+        numSamplesSlider.addEventListener('input', updateSliderValues);
+        generateBtn.addEventListener('click', generate);
+
+        updateSliderValues();
+        generate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Box Plot with Plotly (CSV Upload)</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #file-input, #axis-selectors {
+            margin-bottom: 20px;
+        }
+        #chart {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Box Plot with CSV Upload</h1>
+    <input type="file" id="file-input" accept=".csv">
+    <div id="axis-selectors" style="display: none;">
+        <label for="x-axis">X-axis:</label>
+        <select id="x-axis"></select>
+        <label for="y-axis">Y-axis:</label>
+        <select id="y-axis"></select>
+        <button id="plot-button">Plot</button>
+    </div>
+    <div id="chart"></div>
+
+    <script>
+        let csvData = null;
+        let headers = null;
+
+        document.getElementById('file-input').addEventListener('change', handleFileSelect);
+        document.getElementById('plot-button').addEventListener('click', plotData);
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                csvData = e.target.result;
+                headers = csvData.split('\n')[0].split(',');
+                populateAxisSelectors();
+                document.getElementById('axis-selectors').style.display = 'block';
+            };
+
+            reader.readAsText(file);
+        }
+
+        function populateAxisSelectors() {
+            const xSelect = document.getElementById('x-axis');
+            const ySelect = document.getElementById('y-axis');
+            xSelect.innerHTML = '';
+            ySelect.innerHTML = '';
+
+            headers.forEach((header, index) => {
+                xSelect.options.add(new Option(header.trim(), index));
+                ySelect.options.add(new Option(header.trim(), index));
+            });
+
+            if (ySelect.options.length > 1) {
+                ySelect.selectedIndex = 1;
+            }
+        }
+
+        function plotData() {
+            const xAxisIndex = parseInt(document.getElementById('x-axis').value);
+            const yAxisIndex = parseInt(document.getElementById('y-axis').value);
+
+            const lines = csvData.split('\n');
+            const data = {};
+
+            // Parse data
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',');
+                if (values.length === headers.length) {
+                    const xValue = values[xAxisIndex].trim();
+                    const yValue = parseFloat(values[yAxisIndex]);
+                    
+                    if (!data[xValue]) {
+                        data[xValue] = [];
+                    }
+                    data[xValue].push(yValue);
+                }
+            }
+
+            // Prepare Plotly data
+            const plotlyData = Object.keys(data).map(key => ({
+                y: data[key],
+                type: 'box',
+                name: key
+            }));
+
+            // Create the chart
+            const layout = {
+                title: 'Box Plot',
+                xaxis: { title: headers[xAxisIndex] },
+                yaxis: { title: headers[yAxisIndex] }
+            };
+
+            Plotly.newPlot('chart', plotlyData, layout);
+        }
+    </script>
+</body>
+</html>

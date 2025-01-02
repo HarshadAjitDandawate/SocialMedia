@@ -1,0 +1,32 @@
+<% if (typeof error !== 'undefined' && error.length > 0) { %>
+    <div id="toast-message" class="absolute top-5 left-1/2 transform -translate-x-1/2 rounded-md bg-red-500 shadow-lg p-4 w-72">
+        <span class="inline-block text-white font-semibold">
+            <%= error %>
+        </span>
+        <div id="progress-bar" class="mt-2 h-1 bg-red-300 w-full"></div>
+    </div>
+    
+    <script>
+        const toastMessage = document.getElementById('toast-message');
+        const progressBar = document.getElementById('progress-bar');
+
+        if (toastMessage) {
+            const duration = 2000;
+
+            progressBar.style.width = '100%';
+
+            void progressBar.offsetWidth;
+
+            progressBar.style.transition = `width ${duration}ms linear`;
+            progressBar.style.width = '0%';
+
+            setTimeout(() => {
+                toastMessage.style.opacity = '0';
+                toastMessage.style.transition = 'opacity 300ms ease-out';
+                setTimeout(() => {
+                    toastMessage.remove();
+                }, 300);
+            }, duration);
+        }
+    </script>
+    <% } %>

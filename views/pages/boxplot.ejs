@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Box Plot with CSV Upload</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #axis-selectors {
+            margin-bottom: 20px;
+        }
+        #chart {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="w-64 h-screen bg-white shadow-md fixed top-0 left-0">
+        <%- include('../layouts/sidebar') %>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 ml-64 mr-28 p-10 overflow-y-auto">
+        <%- include('../partials/sidebar') %>
+
+        <!-- Heading -->
+        <h1 class="text-3xl mb-6">Box Plot with CSV Upload</h1>
+
+        <div id="axis-selectors" style="display: none;">
+            <label for="x-axis">X-axis:</label>
+            <select id="x-axis"></select>
+            <label class="ml-2" for="y-axis">Y-axis:</label>
+            <select id="y-axis"></select>
+            <button id="plot-button" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">Plot</button>
+        </div>
+
+        <div id="chart"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const storedData = localStorage.getItem('csvData');
+            if (storedData) {
+                const csvData = JSON.parse(storedData);
+                const headers = csvData[0]; 
+                populateAxisSelectors(headers);
+                document.getElementById('axis-selectors').style.display = 'block';
+
+                document.getElementById('plot-button').addEventListener('click', function() {
+                    plotData(csvData, headers);
+                });
+            } else {
+                alert("No CSV data found . Please upload a CSV file first.");
+            }
+        });
+
+        function populateAxisSelectors(headers) {
+            const xSelect = document.getElementById('x-axis');
+            const ySelect = document.getElementById('y-axis');
+            xSelect.innerHTML = '';
+            ySelect.innerHTML = '';
+
+            headers.forEach((header, index) => {
+                const option = new Option(header.trim(), index);
+                xSelect.add(option);
+                ySelect.add(new Option(header.trim(), index));
+            });
+        }
+
+        function plotData(data, headers) {
+            const xAxisIndex = parseInt(document.getElementById('x-axis').value);
+            const yAxisIndex = parseInt(document.getElementById('y-axis').value);
+          
+            const plotData = {};
+            
+
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];                
+                if (row.length === headers.length) {
+                    const xValue = row[xAxisIndex].trim();
+                    const yValue = parseFloat(row[yAxisIndex]);
+                    
+                    if (!isNaN(yValue)) {
+                        if (!plotData[xValue]) {
+                            console.log(yValue);
+                            
+                            plotData[xValue] = [];
+                        }
+                        plotData[xValue].push(yValue);
+                    }
+                }
+            }
+            
+            const plotlyData = Object.keys(plotData).map(key => ({
+                y: plotData[key],
+                type: 'box',
+                name: key
+            }));
+            
+            const layout = {
+                title: 'Box Plot',
+                xaxis: { title: headers[xAxisIndex] },
+                yaxis: { title: headers[yAxisIndex] }
+            };
+            
+            Plotly.newPlot('chart', plotlyData, layout);
+        }
+    </script>
+</body>
+</html>

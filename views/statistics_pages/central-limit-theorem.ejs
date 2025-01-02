@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central Limit Theorem</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.4.4/math.js"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="w-64 h-screen bg-white shadow-md fixed top-0 left-0">
+        <%- include('../layouts/sidebar') %>
+    </div>
+
+    <div class="flex-1 ml-64 p-10 overflow-y-auto">
+        <h1 class="text-3xl font-bold mb-6">Central Limit Theorem</h1>
+
+        <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Original Data Distribution</h2>
+            <p class="mb-4">This graph shows the frequency distribution of our original data values.</p>
+            <button id="regenerate" class="mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Generate New Data
+            </button>
+            <div id="original-data" class="w-full h-72 mb-6"></div>
+            <div id="data-summary" class="mb-4"></div>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Central Limit Theorem Demonstration</h2>
+            <p class="mb-4">Adjust the sliders to see how sample size and number of samples affect the distribution of sample means.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                <div>
+                    <label for="sample-size" class="block text-lg font-medium mb-2">Sample Size:</label>
+                    <div class="flex items-center">
+                        <input type="range" id="sample-size" min="2" max="100" step="1" value="30" class="w-full">
+                        <span id="sample-size-value" class="ml-4 text-lg">30</span>
+                    </div>
+                </div>
+                <div>
+                    <label for="num-samples" class="block text-lg font-medium mb-2">Number of Samples:</label>
+                    <div class="flex items-center">
+                        <input type="range" id="num-samples" min="10" max="10000" step="10" value="1000" class="w-full">
+                        <span id="num-samples-value" class="ml-4 text-lg">1000</span>
+                    </div>
+                </div>
+            </div>
+            <div id="sample-means" class="w-full h-72 mb-6"></div>
+            <div id="clt-summary" class="mb-4"></div>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Understanding the Central Limit Theorem</h2>
+            <p class="mb-4">
+                The Central Limit Theorem (CLT) states that the distribution of sample means approximates a normal distribution as the sample size becomes larger, regardless of the population's distribution shape.
+            </p>
+            <h3 class="text-xl font-semibold mb-2">Relationships between Sliders and CLT:</h3>
+            <ul class="list-disc list-inside mb-4 space-y-2">
+                <li><strong>Sample Size:</strong> As you increase the sample size, the distribution of sample means becomes more normal and less variable.</li>
+                <li><strong>Number of Samples:</strong> Increasing the number of samples provides a smoother, more precise estimate of the sampling distribution.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let originalData = [];
+
+        function generateData(size) {
+            // Generate data with a mix of different distributions
+            const distributions = [
+                () => math.random(0, 10),  // Uniform distribution
+                () => math.random() * math.random() * 10,  // Right-skewed distribution
+                () => 5 + math.random(-2, 2)  // Normal-like distribution centered at 5
+            ];
+            
+            return Array.from({length: size}, () => {
+                const distribution = distributions[Math.floor(Math.random() * distributions.length)];
+                return Math.round(distribution() * 10) / 10;  // Round to one decimal place
+            });
+        }
+
+        function calculateSampleMeans(data, sampleSize, numSamples) {
+            const sampleMeans = [];
+            for (let i = 0; i < numSamples; i++) {
+                const sample = Array.from({length: sampleSize}, () => data[Math.floor(Math.random() * data.length)]);
+                const mean = math.mean(sample);
+                sampleMeans.push(Math.round(mean * 10) / 10);  // Round to one decimal place
+            }
+            return sampleMeans;
+        }
+
+        function plotHistogram(data, divId, title, color = 'blue') {
+            const trace = {
+                x: data,
+                type: 'histogram',
+                marker: {
+                    color: color,
+                    line: {
+                        color: 'white',
+                        width: 1
+                    }
+                }
+            };
+
+            const layout = {
+                title: title,
+                xaxis: { title: 'Value' },
+                yaxis: { title: 'Frequency' }
+            };
+
+            Plotly.newPlot(divId, [trace], layout);
+        }
+
+        function updateDataSummary() {
+            const mean = math.mean(originalData);
+            const median = math.median(originalData);
+            const std = math.std(originalData);
+            
+            document.getElementById('data-summary').innerHTML = `
+                <strong>Data Summary:</strong><br>
+                Mean: ${mean.toFixed(2)}<br>
+                Median: ${median.toFixed(2)}<br>
+                Standard Deviation: ${std.toFixed(2)}
+            `;
+        }
+
+        function updateCLTSummary(sampleMeans) {
+            const mean = math.mean(sampleMeans);
+            const std = math.std(sampleMeans);
+            
+            document.getElementById('clt-summary').innerHTML = `
+                <strong>Sample Means Summary:</strong><br>
+                Mean of Sample Means: ${mean.toFixed(2)}<br>
+                Standard Error: ${std.toFixed(2)}
+            `;
+        }
+
+        function updatePlots() {
+            const sampleSize = parseInt(document.getElementById('sample-size').value);
+            const numSamples = parseInt(document.getElementById('num-samples').value);
+
+            const sampleMeans = calculateSampleMeans(originalData, sampleSize, numSamples);
+
+            plotHistogram(sampleMeans, 'sample-means', 'Distribution of Sample Means', 'green');
+            updateCLTSummary(sampleMeans);
+        }
+
+        function regenerateData() {
+            originalData = generateData(10000);
+            plotHistogram(originalData, 'original-data', 'Original Data Distribution');
+            updateDataSummary();
+            updatePlots();
+        }
+
+        document.getElementById('sample-size').addEventListener('input', function() {
+            document.getElementById('sample-size-value').textContent = this.value;
+            updatePlots();
+        });
+
+        document.getElementById('num-samples').addEventListener('input', function() {
+            document.getElementById('num-samples-value').textContent = this.value;
+            updatePlots();
+        });
+
+        document.getElementById('regenerate').addEventListener('click', regenerateData);
+
+        regenerateData();
+    </script>
+</body>
+</html>

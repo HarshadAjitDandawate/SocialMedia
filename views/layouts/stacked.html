@@ -1,0 +1,192 @@
+<html>
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-white border-r">
+            <div class="p-4 flex items-center">
+                <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center text-white text-xl">A</div>
+                <div class="ml-2 text-gray-800 font-semibold">Aryan Singh's Workspace</div>
+            </div>
+            <div class="p-4">
+                <input type="text" placeholder="Jump to" class="w-full p-2 border rounded-md">
+            </div>
+            <div class="p-4">
+                <ul>
+                    <li class="flex items-center p-2 text-purple-600 bg-purple-100 rounded-md">
+                        <i class="fas fa-folder mr-2"></i> Gammas
+                    </li>
+                    <li class="flex items-center p-2 text-gray-600">
+                        <i class="fas fa-share-alt mr-2"></i> Shared with you
+                    </li>
+                    <li class="flex items-center p-2 text-gray-600">
+                        <i class="fas fa-globe mr-2"></i> Sites <span class="ml-2 text-xs text-green-500">BETA</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="p-4">
+                <div class="text-gray-600">Folders</div>
+                <ul>
+                    <li class="flex items-center p-2 text-gray-600">
+                        <i class="fas fa-folder mr-2"></i> folder
+                    </li>
+                </ul>
+            </div>
+            <div class="p-4">
+                <ul>
+                    <li class="flex items-center p-2 text-gray-600">
+                        <i class="fas fa-bolt mr-2"></i> Templates
+                    </li>
+                    <li class="flex items-center p-2 text-gray-600">
+                        <i class="fas fa-lightbulb mr-2"></i> Inspiration
+                    </li>
+                    <li class="flex items-center p-2 text-gray-600">
+                        <i class="fas fa-palette mr-2"></i> Themes
+                    </li>
+                    <li class="flex items-center p-2 text-gray-600">
+                        <i class="fas fa-font mr-2"></i> Custom fonts
+                    </li>
+                    <li class="flex items-center p-2 text-gray-600">
+                        <i class="fas fa-trash mr-2"></i> Trash
+                    </li>
+                </ul>
+            </div>
+            <div class="p-4">
+                <div class="text-gray-600">420 credits</div>
+                <ul>
+                    <li class="flex items-center p-2 text-gray-600">
+                        <i class="fas fa-cog mr-2"></i> Settings & members
+                    </li>
+                    <li class="flex items-center p-2 text-gray-600">
+                        <i class="fas fa-headset mr-2"></i> Contact support
+                    </li>
+                    <li class="flex items-center p-2 text-gray-600">
+                        <i class="fas fa-comment-dots mr-2"></i> Share feedback
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="flex-1 p-6">
+            <div class="flex items-center justify-between">
+                <div class="text-2xl font-semibold">Gammas</div>
+                <div class="flex items-center space-x-4">
+                    <button class="bg-purple-600 text-white px-4 py-2 rounded-md">+ Create new</button>
+                    <button class="bg-gray-200 text-gray-600 px-4 py-2 rounded-md">+ New from blank</button>
+                    <button class="bg-gray-200 text-gray-600 px-4 py-2 rounded-md">Import</button>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4 mt-4">
+                <button class="text-gray-600">All</button>
+                <button class="text-purple-600 border-b-2 border-purple-600">Recently viewed</button>
+                <button class="text-gray-600">Created by you</button>
+                <button class="text-gray-600">Favorites</button>
+            </div>
+            <div class="flex items-center justify-between mt-4">
+                <div class="flex items-center space-x-2">
+                    <button class="bg-gray-200 text-gray-600 px-4 py-2 rounded-md">Grid</button>
+                    <button class="bg-gray-200 text-gray-600 px-4 py-2 rounded-md">List</button>
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-4 mt-4">
+                <!-- Card 1 -->
+                <div class="bg-white p-4 rounded-md shadow-md">
+                    <div class="bg-gray-200 h-32 rounded-md"></div>
+                    <div class="mt-4 text-gray-800 font-semibold">Untitled</div>
+                    <div class="flex items-center text-gray-600 mt-2">
+                        <i class="fas fa-lock mr-2"></i> Private
+                    </div>
+                    <div class="flex items-center text-gray-600 mt-2">
+                        <div class="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm">A</div>
+                        <div class="ml-2">Created by you</div>
+                    </div>
+                    <div class="text-gray-600 mt-2">Last viewed 14 days ago</div>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-white p-4 rounded-md shadow-md">
+                    <div class="bg-gray-200 h-32 rounded-md"></div>
+                    <div class="mt-4 text-gray-800 font-semibold">DataViz Pro</div>
+                    <div class="text-gray-600">dataviz-pro-iolfd2z.gamma.site</div>
+                    <div class="flex items-center text-gray-600 mt-2">
+                        <i class="fas fa-globe mr-2"></i> Site
+                    </div>
+                    <div class="flex items-center text-gray-600 mt-2">
+                        <div class="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm">A</div>
+                        <div class="ml-2">Created by you</div>
+                    </div>
+                    <div class="text-gray-600 mt-2">Last viewed 1 month ago</div>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-white p-4 rounded-md shadow-md">
+                    <div class="bg-gray-200 h-32 rounded-md"></div>
+                    <div class="mt-4 text-gray-800 font-semibold">InsightVisualize</div>
+                    <div class="text-gray-600">insight-visualize-6alco71.gamma.site</div>
+                    <div class="flex items-center text-gray-600 mt-2">
+                        <i class="fas fa-globe mr-2"></i> Site
+                    </div>
+                    <div class="flex items-center text-gray-600 mt-2">
+                        <div class="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm">A</div>
+                        <div class="ml-2">Created by you</div>
+                    </div>
+                    <div class="text-gray-600 mt-2">Last viewed 2 months ago</div>
+                </div>
+                <!-- Card 4 -->
+                <div class="bg-white p-4 rounded-md shadow-md">
+                    <div class="bg-gray-200 h-32 rounded-md"></div>
+                    <div class="mt-4 text-gray-800 font-semibold">Copy of Project Kickoff Template</div>
+                    <div class="flex items-center text-gray-600 mt-2">
+                        <i class="fas fa-lock mr-2"></i> Private
+                    </div>
+                    <div class="flex items-center text-gray-600 mt-2">
+                        <div class="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm">A</div>
+                        <div class="ml-2">Created by you</div>
+                    </div>
+                    <div class="text-gray-600 mt-2">Last viewed 2 months ago</div>
+                </div>
+                <!-- Card 5 -->
+                <div class="bg-white p-4 rounded-md shadow-md">
+                    <div class="bg-gray-200 h-32 rounded-md"></div>
+                    <div class="mt-4 text-gray-800 font-semibold">Copy of Portfolio site</div>
+                    <div class="flex items-center text-gray-600 mt-2">
+                        <i class="fas fa-lock mr-2"></i> Private
+                    </div>
+                    <div class="flex items-center text-gray-600 mt-2">
+                        <div class="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm">A</div>
+                        <div class="ml-2">Created by you</div>
+                    </div>
+                    <div class="text-gray-600 mt-2">Last viewed 2 months ago</div>
+                </div>
+                <!-- Card 6 -->
+                <div class="bg-white p-4 rounded-md shadow-md">
+                    <div class="bg-gray-200 h-32 rounded-md"></div>
+                    <div class="mt-4 text-gray-800 font-semibold">Untitled</div>
+                    <div class="flex items-center text-gray-600 mt-2">
+                        <i class="fas fa-lock mr-2"></i> Private
+                    </div>
+                    <div class="flex items-center text-gray-600 mt-2">
+                        <div class="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm">A</div>
+                        <div class="ml-2">Created by you</div>
+                    </div>
+                    <div class="text-gray-600 mt-2">Last viewed 2 months ago</div>
+                </div>
+                <!-- Card 7 -->
+                <div class="bg-white p-4 rounded-md shadow-md">
+                    <div class="bg-gray-200 h-32 rounded-md"></div>
+                    <div class="mt-4 text-gray-800 font-semibold">Untitled</div>
+                    <div class="flex items-center text-gray-600 mt-2">
+                        <i class="fas fa-lock mr-2"></i> Private
+                    </div>
+                    <div class="flex items-center text-gray-600 mt-2">
+                        <div class="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm">A</div>
+                        <div class="ml-2">Created by you</div>
+                    </div>
+                    <div class="text-gray-600 mt-2">Last viewed 2 months ago</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

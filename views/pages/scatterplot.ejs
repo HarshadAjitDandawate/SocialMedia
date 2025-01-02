@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scatter Plot</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+  </head>
+  <body class="bg-gray-100">
+    <div class="w-64 h-screen bg-white shadow-md fixed top-0 left-0">
+      <%- include('../layouts/sidebar') %>
+    </div>
+    <!-- Main Content -->
+    <div class="flex-1 ml-64 mr-28 p-10 overflow-y-auto">
+      <%- include('../partials/sidebar') %>
+
+      <h1 class="text-2xl font-bold mb-4">Scatter Plot</h1>
+      <div id="chart-controls" class="mb-4">
+        <div class="flex flex-row gap-3">
+            <div class="mb-2">
+              <label for="x-axis" class="mr-2">X-axis:</label>
+              <select id="x-axis" class="border p-2 rounded"></select>
+            </div>
+            <div class="mb-2">
+              <label for="y-axis" class="mr-2">Y-axis:</label>
+              <select id="y-axis" class="border p-2 rounded"></select>
+            </div>
+            <div class="mb-2">
+              <label for="color" class="mr-2">Color:</label>
+              <select id="color" class="border p-2 rounded">
+                <option value="">None</option>
+              </select>
+            </div>
+        </div>
+        <button
+          id="plot-button"
+          class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Plot
+        </button>
+      </div>
+      <div id="chart"></div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const csvData = JSON.parse(localStorage.getItem("csvData"));
+        if (csvData) {
+          populateControls(csvData[0]);
+        } else {
+          document.getElementById("chart-controls").innerHTML =
+            "<p>Please upload a CSV file first.</p>";
+        }
+      });
+
+      document
+        .getElementById("plot-button")
+        .addEventListener("click", plotData);
+
+      function populateControls(headers) {
+        const xAxis = document.getElementById("x-axis");
+        const yAxis = document.getElementById("y-axis");
+        const color = document.getElementById("color");
+
+        xAxis.innerHTML = "";
+        yAxis.innerHTML = "";
+        color.innerHTML = "<option value=''>None</option>";
+
+        headers.forEach((header, index) => {
+          const option = new Option(header.trim(), index);
+          xAxis.options.add(option);
+          yAxis.options.add(option.cloneNode(true));
+          color.options.add(option.cloneNode(true));
+        });
+      }
+
+      function plotData() {
+        const csvData = JSON.parse(localStorage.getItem("csvData"));
+        const xAxisIndex = parseInt(document.getElementById("x-axis").value);
+        const yAxisIndex = parseInt(document.getElementById("y-axis").value);
+        const colorIndex = document.getElementById("color").value;
+
+        if (xAxisIndex === yAxisIndex) return;
+
+        let traces;
+        if (colorIndex !== "") {
+          traces = _.groupBy(csvData.slice(1), row => row[colorIndex]);
+        } else {
+          traces = { "All Data": csvData.slice(1) };
+        }
+
+        const plotData = Object.keys(traces).map(group => ({
+          x: traces[group].map(row => parseFloat(row[xAxisIndex])),
+          y: traces[group].map(row => parseFloat(row[yAxisIndex])),
+          mode: "markers",
+          type: "scatter",
+          name: group,
+        }));
+
+        const layout = {
+          title: "Scatter Plot",
+          xaxis: { title: csvData[0][xAxisIndex] },
+          yaxis: { title: csvData[0][yAxisIndex] },
+        };
+
+        Plotly.newPlot("chart", plotData, layout);
+      }
+    </script>
+  </body>
+</html>

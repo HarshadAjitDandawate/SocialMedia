@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <title>custom data</title>
+  </head>
+  <body>
+    <div class="w-64 h-screen bg-white shadow-md fixed top-0 left-0">
+      <%- include('../layouts/sidebar') %>
+    </div>
+    <div class="flex-1 ml-64 mr-28 p-10 overflow-y-auto">
+      <%- include('../partials/sidebar') %>
+      <h1 class="text-3xl mb-6">Upload data</h1>
+      
+      <form id="upload-form" class="bg-gray-100 rounded-lg">
+        <label for="file-upload" class="block text-lg font-medium text-gray-700">Choose a CSV file</label>
+        <input id="file-upload" name="file" type="file" accept=".csv" class="mt-2 mb-4 border border-gray-300 rounded-lg p-2 w-1/2" />
+        
+        <button type="button" id="upload-btn" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">Upload</button>
+      </form>
+
+      <!-- Containers for Head and Tail Tables -->
+      <div id="head-table-container" class="mt-10 "></div>
+      <div id="tail-table-container" class="mt-10 "></div>
+    </div>
+
+    <script>
+      document.getElementById('upload-btn').addEventListener('click', function() {
+        const fileInput = document.getElementById('file-upload');
+        const file = fileInput.files[0];
+
+        if (!file) {
+          alert("Please choose a CSV file to upload.");
+          return;
+        }
+
+        Papa.parse(file, {
+          complete: function(results) {
+            const data = results.data;
+            localStorage.setItem('csvData', JSON.stringify(data));
+            const firstFourRows = data.slice(1, 5);
+            const lastFourRows = data.slice(-4);
+
+            const headers = data[0];
+
+            displayTable(headers, firstFourRows, 'head-table-container', 'Head');
+            displayTable(headers, lastFourRows, 'tail-table-container', 'Tail'); 
+          }
+        });
+      });
+
+      function displayTable(headers, rows, containerId, title) {
+        const tableContainer = document.getElementById(containerId);
+        tableContainer.innerHTML = ''; 
+
+        const titleElement = document.createElement('h2');
+        titleElement.classList.add('text-2xl', 'mb-4', 'font-semibold');
+        titleElement.textContent = title;
+        tableContainer.appendChild(titleElement);
+
+        const table = document.createElement('table');
+        table.classList.add('table-auto','w-full', 'text-left', 'bg-white',  'rounded-lg');
+
+
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        headers.forEach(header => {
+          const th = document.createElement('th');
+          th.classList.add('border', 'px-4', 'py-2', 'bg-gray-100', 'font-semibold');
+          th.textContent = header;
+          headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+
+
+        const tbody = document.createElement('tbody');
+        rows.forEach(row => {
+          const tr = document.createElement('tr');
+          row.forEach(cell => {
+            const td = document.createElement('td');
+            td.classList.add('border', 'px-4', 'py-2');
+            td.textContent = cell;
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+
+        tableContainer.appendChild(table);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+
+<% if (typeof success !== 'undefined' && success.length > 0) { %>
+    <div id="success-toast-message" class="absolute top-5 left-1/2 transform -translate-x-1/2 rounded-md bg-green-500 shadow-lg p-4 w-72">
+        <span class="inline-block text-white font-semibold">
+            <%= success %>
+        </span>
+        <div id="success-progress-bar" class="mt-2 h-1 bg-green-300 w-full"></div>
+    </div>
+
+    <script>
+        const successToastMessage = document.getElementById('success-toast-message');
+        const successProgressBar = document.getElementById('success-progress-bar');
+
+        if (successToastMessage) {
+            const duration = 2000;
+
+            successProgressBar.style.width = '100%';
+
+            void successProgressBar.offsetWidth;
+
+            successProgressBar.style.transition = `width ${duration}ms linear`;
+            successProgressBar.style.width = '0%';
+
+            setTimeout(() => {
+                successToastMessage.style.opacity = '0';
+                successToastMessage.style.transition = 'opacity 300ms ease-out';
+                setTimeout(() => {
+                    successToastMessage.remove();
+                }, 300);
+            }, duration);
+        }
+    </script>
+<% } %>
