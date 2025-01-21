@@ -1,5 +1,5 @@
 const userModel = require('../models/user-model');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const {generateToken} = require('../utils/generateTokens');
 
@@ -64,7 +64,7 @@ module.exports.loginUser = () => async (req, res) => {
       let token = generateToken(user);
       res.cookie("token", token);
       req.flash('success', 'Logged in successfully');
-      res.redirect("/statistics");
+      res.redirect("/Community");
     } else {
       req.flash('error','Incorrect Email or Password');
       res.redirect('/login');

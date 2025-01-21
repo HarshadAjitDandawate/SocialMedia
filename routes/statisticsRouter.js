@@ -7,7 +7,6 @@ router.get('/',isLoggedin,(req,res)=>{
     res.render('statistics', { statisticsData });
 })
 
-
 router.get('/:page',isLoggedin,(req,res)=>{
     const page = req.params.page;
     const reqPages = ['normal-distribution', 'binomial-distribution' , 'central-limit-theorem'];

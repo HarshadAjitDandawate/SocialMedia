@@ -46,9 +46,7 @@ app.use('/login',logoinRouter);
 app.use('/logout', logoutRouter);
 app.use('/community', communityRouter);
 app.use('/posts', postsRouter);
-app.use('/quick-report', quickReportRouter);
-app.use('/custom-data',customDataRouter)
-app.use('/statistics', statisticsRouter);
+
 
 const Port = process.env.PORT || 3000;
 app.listen(Port)
